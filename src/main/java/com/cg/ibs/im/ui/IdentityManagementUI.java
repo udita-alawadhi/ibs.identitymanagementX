@@ -563,7 +563,7 @@ public class IdentityManagementUI {
 	}
 
 	public void checkStatus() {
-		System.out.println("Enter the applicant ID to check status:");
+		System.out.println("Enter the ID to check status:");
 		try {
 			long applicantId = scanner.nextLong();
 			while (!customer.verifyApplicantId(applicantId)) {
