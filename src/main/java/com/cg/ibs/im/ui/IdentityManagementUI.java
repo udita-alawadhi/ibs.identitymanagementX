@@ -563,9 +563,15 @@ public class IdentityManagementUI {
 	}
 
 	public void checkStatus() {
-		System.out.println("Enter the ID to check status:");
+		System.out.println("Enter the applicant ID to check status:");
 		try {
-			long applicantId = scanner.nextLong();
+			long applicantId;
+			while(!scanner.hasNextLong()){
+				System.out.println("Enter a valid Applicant ID!");
+				scanner.next();
+				scanner.nextLine();
+			}
+			applicantId = scanner.nextLong();
 			while (!customer.verifyApplicantId(applicantId)) {
 				System.out.println("Please enter a valid applicant ID");
 				applicantId = scanner.nextLong();
@@ -590,7 +596,7 @@ public class IdentityManagementUI {
 				System.out.println("The application has been denied.");
 			}
 		} catch (Exception exception) {
-			System.out.println(exception.getStackTrace());
+			System.out.println(exception.getMessage());
 		}
 
 	}
