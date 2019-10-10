@@ -263,8 +263,12 @@ public class IdentityManagementUI {
 			System.out.println("There are no denied applications.");
 		}
 	}
+	
+	public void signUp() { //newAccount
+		newApplication();
+	}
 
-	public void signUp() {
+	public void newApplication() {
 		System.out.println("Enter the following Details:");
 
 		BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
