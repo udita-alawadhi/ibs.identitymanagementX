@@ -502,21 +502,64 @@ public class IdentityManagementUI {
 		BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Enter your permanent address:");
 		AddressBean address = new AddressBean();
-		System.out.println("House Number:");
+		
 		try {
-			address.setHouseNumber(keyboardInput.readLine());
+			System.out.println("House Number:");
+			String houseNumber = keyboardInput.readLine();
+			while(houseNumber.length()==0){
+				System.out.println("Please enter an appropriate house number.");
+				houseNumber = keyboardInput.readLine();
+			}
+			address.setHouseNumber(houseNumber);
+			
 			System.out.println("Street Name:");
-			address.setStreetName(keyboardInput.readLine());
+			String streetName = keyboardInput.readLine();
+			while(streetName.length()==0){
+				System.out.println("Please enter an appropriate street name.");
+				streetName = keyboardInput.readLine();
+			}
+			address.setStreetName(streetName);
+			
 			System.out.println("Landmark:");
-			address.setLandmark(keyboardInput.readLine());
+			String landmark = keyboardInput.readLine();
+			while(landmark.length()==0){
+				System.out.println("Please enter an appropriate landmark name.");
+				landmark = keyboardInput.readLine();
+			}
+			address.setStreetName(landmark);
+			
 			System.out.println("Area:");
-			address.setArea(keyboardInput.readLine());
+			String area = keyboardInput.readLine();
+			while(area.length()==0){
+				System.out.println("Please enter an appropriate area name.");
+				area = keyboardInput.readLine();
+			}
+			address.setStreetName(area);
+			
 			System.out.println("City:");
-			address.setCity(keyboardInput.readLine());
+			String city = keyboardInput.readLine();
+			while(city.length()==0){
+				System.out.println("Please enter an appropriate city name.");
+				city = keyboardInput.readLine();
+			}
+			address.setStreetName(city);
+			
 			System.out.println("State:");
-			address.setState(keyboardInput.readLine());
+			String state = keyboardInput.readLine();
+			while(state.length()==0){
+				System.out.println("Please enter an appropriate state name.");
+				state = keyboardInput.readLine();
+			}
+			address.setStreetName(state);
+			
 			System.out.println("Country:");
-			address.setCountry(keyboardInput.readLine());
+			String country = keyboardInput.readLine();
+			while(country.length()==0){
+				System.out.println("Please enter an appropriate country name.");
+				country = keyboardInput.readLine();
+			}
+			address.setStreetName(country);
+			
 			System.out.println("Pincode:");
 			String pinCode = keyboardInput.readLine();
 			while (!customer.verifyPincode(pinCode)) {
