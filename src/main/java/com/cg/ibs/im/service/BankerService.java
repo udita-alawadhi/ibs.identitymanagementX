@@ -1,7 +1,6 @@
 package com.cg.ibs.im.service;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import com.cg.ibs.bean.AccountBean;
@@ -29,13 +28,13 @@ public interface BankerService {
 
 	boolean isApplicantPresent(long applicantId);
 
-	void downloadDocuments(StringBuilder sb) throws IOException;
-
-	StringBuilder getDocuments() throws FileNotFoundException, IOException, ClassNotFoundException;
-
 	String displayDetails(long applicantId) throws IBSCustomException;
 
 	String generateUsername(long applicantId) throws IBSCustomException;
 
 	AccountBean createNewAccount();
+
+	boolean download(String destPath, String fileName);
+
+	List<String> getFilesAvialable();
 }

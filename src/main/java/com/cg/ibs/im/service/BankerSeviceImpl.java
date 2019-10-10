@@ -1,14 +1,11 @@
 package com.cg.ibs.im.service;
 
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.cg.ibs.bean.AccountBean;
@@ -27,16 +24,16 @@ public class BankerSeviceImpl implements BankerService {
 	ApplicantDao applicantDao = new ApplicantDaoImpl();
 	CustomerBean customer = new CustomerBean();
 	AccountBean account = new AccountBean();
-	
+
 	private static BigInteger uciConstant = new BigInteger("1111222210000000");
-	private static BigInteger accountVariable= new BigInteger("05010010000");
-	
+	private static BigInteger accountVariable = new BigInteger("05010010000");
+
 	public static String generateUci() {
 		uciConstant = uciConstant.add(new BigInteger("1"));
 		String str = uciConstant.toString();
 		return str;
 	}
-	
+
 	public static String generateAccountNumber() {
 		accountVariable = accountVariable.add(new BigInteger("1"));
 		String str = accountVariable.toString();
@@ -100,7 +97,7 @@ public class BankerSeviceImpl implements BankerService {
 
 	@Override
 	public CustomerBean createNewCustomer(ApplicantBean applicant) throws IBSCustomException {
-		
+
 		long applicantId = applicant.getApplicantId();
 
 		String customerUci = generateUci();
@@ -125,31 +122,31 @@ public class BankerSeviceImpl implements BankerService {
 		// set other details
 		return account;
 	}
-	
+
 	@Override
 	public String displayDetails(long applicantId) throws IBSCustomException {
 		ApplicantBean applicant = applicantDao.getApplicantDetails(applicantId);
 		return applicant.toString();
 
 	}
+	
+	@Override
+	public List<String> getFilesAvialable() {
+		List<String> files = new ArrayList<>();
+		File upLoc = new File(CustomerDaoImpl.UPLOADS_LOC);
+		for (File f : upLoc.listFiles()) {
+			files.add(f.getName());
+		}
+		return files;
+	}
 
 	@Override
-	public StringBuilder getDocuments() throws FileNotFoundException, IOException, ClassNotFoundException {
-		ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("./document.dat"));
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder = (StringBuilder) inputStream.readObject();
-		inputStream.close();
-		return stringBuilder;
+	public boolean download(String destPath, String fileName) {
+		String srcPath = CustomerDaoImpl.UPLOADS_LOC + "/" + fileName;
+		destPath += "/" + fileName;
+		return customerDao.copy(srcPath, destPath);
 	}
-	
-	@Override
-	public void downloadDocuments(StringBuilder sb) throws IOException {
-		BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("./downloads/downloadCopy.pdf"));
-		bufferedOutputStream.write(sb.toString().getBytes());
-		bufferedOutputStream.flush();
-		bufferedOutputStream.close();
-	}
-	
+
 	@Override
 	public boolean isApplicantPresent(long applicantId) {
 		boolean result = false;
@@ -159,7 +156,7 @@ public class BankerSeviceImpl implements BankerService {
 
 		return result;
 	}
-	
+
 	@Override
 	public boolean isApplicantPresentInPendingList(long applicantId) {
 		boolean result = false;
@@ -175,4 +172,5 @@ public class BankerSeviceImpl implements BankerService {
 		}
 		return result;
 	}
+
 }

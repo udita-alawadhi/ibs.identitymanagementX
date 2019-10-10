@@ -5,8 +5,11 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.cg.ibs.bean.AccountBean;
 import com.cg.ibs.bean.AddressBean;
@@ -35,13 +38,13 @@ public class IdentityManagementUI {
 			System.out.println("Choose your identity from MENU:");
 			System.out.println("------------------------");
 			for (UserMenu menu : UserMenu.values()) {
-				System.out.println((menu.ordinal())+1 + "\t" + menu);
+				System.out.println((menu.ordinal()) + 1 + "\t" + menu);
 			}
 			System.out.println("Choice");
 			int ordinal = scanner.nextInt();
 
 			if (0 < (ordinal) && UserMenu.values().length >= (ordinal)) {
-				choice = UserMenu.values()[ordinal-1];
+				choice = UserMenu.values()[ordinal - 1];
 				switch (choice) {
 				case BANKER:
 					try {
@@ -76,18 +79,18 @@ public class IdentityManagementUI {
 	public void selectBankerAction() {
 		if (bankerLogin()) {
 			BankerAction choice = null;
-			while(choice!=BankerAction.GO_BACK){
+			while (choice != BankerAction.GO_BACK) {
 				System.out.println("------------------------");
 				System.out.println("Choose a valid option");
 				System.out.println("------------------------");
 				for (BankerAction menu : BankerAction.values()) {
-					System.out.println(menu.ordinal()+1 + "\t" + menu);
+					System.out.println(menu.ordinal() + 1 + "\t" + menu);
 				}
 				System.out.println("Choices:");
 				int ordinal = scanner.nextInt();
-	
+
 				if (0 < ordinal && BankerAction.values().length >= ordinal) {
-					choice = BankerAction.values()[ordinal-1];
+					choice = BankerAction.values()[ordinal - 1];
 					switch (choice) {
 					case VIEW_PENDING_DETAILS:
 						try {
@@ -116,18 +119,18 @@ public class IdentityManagementUI {
 
 	public void selectCustomerAction() {
 		CustomerMenu choice = null;
-		while(choice!=CustomerMenu.GO_BACK){
+		while (choice != CustomerMenu.GO_BACK) {
 			System.out.println("------------------------");
 			System.out.println("Choose an appropriate option from MENU:");
 			System.out.println("------------------------");
 			for (CustomerMenu menu : CustomerMenu.values()) {
-				System.out.println(menu.ordinal()+1 + "\t" + menu);
+				System.out.println(menu.ordinal() + 1 + "\t" + menu);
 			}
 			System.out.println("Choice");
 			int ordinal = scanner.nextInt();
-	
+
 			if (0 < ordinal && UserMenu.values().length >= ordinal) {
-				choice = CustomerMenu.values()[ordinal-1];
+				choice = CustomerMenu.values()[ordinal - 1];
 				switch (choice) {
 				case SIGNUP:
 					try {
@@ -166,6 +169,7 @@ public class IdentityManagementUI {
 	}
 
 	void pendingApplications() {
+		BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
 		Set<Long> pendingList = banker.viewPendingApplications();
 		while (pendingList.size() > 0) {
 			System.out.println("The list of the pending applicants is here:");
@@ -173,16 +177,25 @@ public class IdentityManagementUI {
 			while (iterator.hasNext()) {
 				System.out.println(iterator.next());
 			}
+
 			System.out.println("Enter an application number to check details:");
 			long applicantId = scanner.nextLong();
-			
+			//
 			while (!banker.isApplicantPresentInPendingList(applicantId)) {
 				System.out.println("applicant is not present. Please enter a valid id:");
 				applicantId = scanner.nextLong();
 			}
 			try {
 				System.out.println(banker.displayDetails(applicantId));
-				banker.downloadDocuments(banker.getDocuments());
+				List<String> fnms = banker.getFilesAvialable();
+				for (int i = 0; i < fnms.size(); i++) {
+					System.out.println(i + "\t" + fnms.get(i));
+				}
+				System.out.println("Enter file index to download: ");
+				int index = scanner.nextInt();
+				System.out.println("Enter a download folder loc: ");
+				String dwnLoc = scanner.next();
+				banker.download(dwnLoc, fnms.get(index));
 			} catch (Exception exception) {
 				System.out.println(exception.getMessage());
 			}
@@ -204,9 +217,10 @@ public class IdentityManagementUI {
 					applicant.setApplicantStatus(ApplicantStatus.APPROVED);
 					customer.storeApplicantDetails(applicant);
 					CustomerBean newCustomer = banker.createNewCustomer(applicant);
-					System.out.println("The status has been approved for the applicant.\nCustomer ID: " + newCustomer.getUci() + "\n");
+					System.out.println("The status has been approved for the applicant.\nCustomer ID: "
+							+ newCustomer.getUci() + "\n");
 					account = newCustomer.getAccount();
-					System.out.println("Account generated: " +account.getAccountNumber());
+					System.out.println("Account generated: " + account.getAccountNumber());
 				} catch (Exception exception) {
 					System.out.println(exception.getMessage());
 				}
@@ -220,24 +234,23 @@ public class IdentityManagementUI {
 				}
 			}
 			pendingList = banker.viewPendingApplications();
-			if(pendingList.size()>0) {
+			if (pendingList.size() > 0) {
 				System.out.println("Do you want to keep reviewing applications?\n1. yes\n2. no");
 				int continueChoice = scanner.nextInt();
-				while(continueChoice != 1 && continueChoice != 2){
-					System.out.println("Please enter an appropriate value. Do you want to keep reviewing applications?\n1. yes\n2. no");
+				while (continueChoice != 1 && continueChoice != 2) {
+					System.out.println(
+							"Please enter an appropriate value. Do you want to keep reviewing applications?\n1. yes\n2. no");
 					continueChoice = scanner.nextInt();
 				}
-				if(continueChoice == 2){
+				if (continueChoice == 2) {
 					break;
 				}
 			}
 		}
-		if(pendingList.size()==0){
+		if (pendingList.size() == 0) {
 			System.out.println("There are no pending applicant requests.");
 		}
-		
-		
-		
+
 	}
 
 	void approvedApplications() {
@@ -263,8 +276,8 @@ public class IdentityManagementUI {
 			System.out.println("There are no denied applications.");
 		}
 	}
-	
-	public void signUp() { //newAccount
+
+	public void signUp() { // newAccount
 		newApplication();
 	}
 
@@ -322,17 +335,40 @@ public class IdentityManagementUI {
 		}
 
 		System.out.println("Enter your Date of Birth in DD-MM-YYYY format");
-		String date = scanner.next();
+		try {
+			String date = keyboardInput.readLine();
+			DateTimeFormatter dtFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-		// if format of date is invalid, ask for DOB again.
-		DateTimeFormatter dtFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		LocalDate dt = LocalDate.parse(date, dtFormat);
-		while (!customer.verifyDob(dt)) {
-			System.out.println("Please enter a valid date of birth. Your age should be greater than 18!");
-			date = scanner.next();
-			dt = LocalDate.parse(date, dtFormat);
+			LocalDate localDate = null;
+			CustomerService customer = new CustomerServiceImpl();
+
+			while (localDate == null || !customer.verifyDob(localDate)) {
+				System.out.println(
+						"Please enter a valid date of birth in correct format(dd-MM-yyyy).\nYour age should be greater than 18!");
+				date = keyboardInput.readLine();
+				Pattern pattern = Pattern.compile("((3[01])|([12][0-9])|(0[1-9]))\\-((1[0-2])|(0[1-9]))\\-([0-9]{4})");
+				Matcher matcher = pattern.matcher(date);
+				if (matcher.matches()) {
+					localDate = LocalDate.parse(date, dtFormat);
+				} else {
+					localDate = null;
+				}
+			}
+			applicant.setDob(localDate);
+		} catch (Exception exception) {
+			System.out.println(exception.getMessage());
 		}
-		applicant.setDob(dt);
+
+		// // if format of date is invalid, ask for DOB again.
+		// DateTimeFormatter dtFormat =
+		// DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		// LocalDate dt = LocalDate.parse(date, dtFormat);
+		// while (!customer.verifyDob(dt)) {
+		// System.out.println("Please enter a valid date of birth. Your age
+		// should be greater than 18!");
+		// date = scanner.next();
+		// dt = LocalDate.parse(date, dtFormat);
+		// }
 
 		// Enter Gender
 		Gender genderChoice = null;
@@ -407,29 +443,29 @@ public class IdentityManagementUI {
 		applicant.setAlternateMobileNumber(alternateMobileNumber);
 
 		System.out.println("Enter email id");
-		try{
+		try {
 			String emailId = keyboardInput.readLine();
 			while (!customer.verifyEmailId(emailId)) {
 				System.out.println("Please enter an appropriate email Id");
 				emailId = keyboardInput.readLine();
 			}
 			applicant.setEmailId(emailId);
-		} catch (Exception exception){
+		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
-		
+
 		System.out.println("Enter Aadhar Number");
-		try{
+		try {
 			String aadharNumber = keyboardInput.readLine();
 			while (!customer.verifyAadharNumber(aadharNumber)) {
 				System.out.println("Please enter an appropriate aadhar number");
 				aadharNumber = keyboardInput.readLine();
 			}
 			applicant.setAadharNumber(aadharNumber);
-		}catch (Exception exception){
+		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
-		
+
 		System.out.println("Enter Pan Number");
 		String panNumber = scanner.next();
 		while (!customer.verifyPanNumber(panNumber)) {
@@ -444,19 +480,19 @@ public class IdentityManagementUI {
 			System.out.println("Enter the Path of Document 1 ");
 			String filePath = keyboardInput.readLine();
 			boolean choice = customer.upload(filePath);
-	           
-			while(choice!=true){
+
+			while (choice != true) {
 				System.out.println("Please enter the path appropriately");
 				filePath = keyboardInput.readLine();
 				choice = customer.upload(filePath);
 			}
-			
+
 			applicant.setApplicationDate(LocalDate.now());
 			applicant.setApplicantStatus(ApplicantStatus.PENDING);
 
 			customer.saveApplicantDetails(applicant);
 			System.out.println("Keep updated with your status.\nYour applicant id is " + applicant.getApplicantId());
-			
+
 		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
@@ -501,11 +537,11 @@ public class IdentityManagementUI {
 		System.out.println("Enter the password");
 		String password = scanner.next();
 		try {
-			if(customer.isCustomerValid(userUci)==false){
+			if (customer.isCustomerValid(userUci) == false) {
 				System.out.println("INVALID DETAILS! Enter the details again.");
 				login();
 			}
-			try{
+			try {
 				if (customer.login(userUci, password)) {
 					newCustomer = customer.getCustomerDetails(userUci);
 					if (customer.firstLogin(userUci)) {
@@ -515,15 +551,14 @@ public class IdentityManagementUI {
 					String accountNumber = newCustomer.getAccount().getAccountNumber();
 					System.out.println("Your account: ");
 					System.out.println("Account number: " + accountNumber);
-				} 
-				} catch (Exception exception){
-					System.out.println();
 				}
+			} catch (Exception exception) {
+				System.out.println();
+			}
 		} catch (Exception exception) {
 			System.out.println();
 		}
-		
-		
+
 	}
 
 	public void firstLogin(String userUci, String password) {
@@ -570,7 +605,7 @@ public class IdentityManagementUI {
 		System.out.println("Enter the applicant ID to check status:");
 		try {
 			long applicantId;
-			while(!scanner.hasNextLong()){
+			while (!scanner.hasNextLong()) {
 				System.out.println("Enter a valid Applicant ID!");
 				scanner.next();
 				scanner.nextLine();
@@ -596,7 +631,7 @@ public class IdentityManagementUI {
 				String accountNumber = account.getAccountNumber();
 				System.out.println("\nAccount Number: " + accountNumber);
 
-			} else if(status == ApplicantStatus.DENIED) {
+			} else if (status == ApplicantStatus.DENIED) {
 				System.out.println("The application has been denied.");
 			}
 		} catch (Exception exception) {
