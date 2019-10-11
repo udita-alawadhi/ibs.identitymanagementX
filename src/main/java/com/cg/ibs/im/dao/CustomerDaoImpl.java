@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.cg.ibs.bean.AccountBean;
 import com.cg.ibs.bean.CustomerBean;
 import com.cg.ibs.im.exception.IBSCustomException;
 import com.cg.ibs.im.exception.IBSException;
@@ -19,6 +21,28 @@ public class CustomerDaoImpl implements CustomerDao {
 	private static Map<String, CustomerBean> customerDao = new HashMap<String, CustomerBean>();
 	public static final String UPLOADS_LOC="./uploads";
 	CustomerBean newCustomer = new CustomerBean();
+	
+	static {
+		CustomerBean customer1 = new CustomerBean();
+		customer1.setUci("5555111151511001");
+		customer1.setUserId("udita");
+		customer1.setPassword("abc123");
+		AccountBean account1 = new AccountBean();
+		account1.setAccountNumber("05100001111");
+		account1.setCurrentBalance(new BigDecimal("20048.32"));
+		customer1.setAccounts(account1);
+		customerDao.put(customer1.getUci(), customer1);
+		
+		CustomerBean customer2 = new CustomerBean();
+		customer2.setUci("5555111151512201");
+		customer2.setUserId("chetan551");
+		customer2.setPassword("xyz123");
+		AccountBean account2 = new AccountBean();
+		account2.setAccountNumber("05100222111");
+		account2.setCurrentBalance(new BigDecimal("208.92"));
+		customer2.setAccounts(account2);
+		customerDao.put(customer2.getUci(), customer2);
+	}
 	
 	@Override
 	public boolean saveCustomer(CustomerBean customer) throws IBSCustomException {
