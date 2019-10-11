@@ -77,7 +77,23 @@ public class IdentityManagementUI {
 	}
 
 	public void selectBankerAction() {
-		if (bankerLogin()) {
+
+		BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
+
+		try {
+			System.out.println("Enter a login ID:");
+			String bankUser = keyboardInput.readLine();
+			System.out.println("Enter password:");
+			String bankPassword = keyboardInput.readLine();
+
+			while (!banker.verifyLogin(bankUser, bankPassword)) {
+				System.out.println("Please enter valid details!");
+				System.out.println("Enter login Id:");
+				bankUser = keyboardInput.readLine();
+				System.out.println("Enter password:");
+				bankPassword = keyboardInput.readLine();
+			}
+
 			BankerAction choice = null;
 			while (choice != BankerAction.GO_BACK) {
 				System.out.println("------------------------");
@@ -114,7 +130,10 @@ public class IdentityManagementUI {
 					choice = null;
 				}
 			}
+		} catch (Exception exception) {
+			System.out.println(exception.getMessage());
 		}
+
 	}
 
 	public void selectCustomerAction() {
@@ -502,64 +521,64 @@ public class IdentityManagementUI {
 		BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Enter your permanent address:");
 		AddressBean address = new AddressBean();
-		
+
 		try {
 			System.out.println("House Number:");
 			String houseNumber = keyboardInput.readLine();
-			while(houseNumber.length()==0){
+			while (houseNumber.length() == 0) {
 				System.out.println("Please enter an appropriate house number.");
 				houseNumber = keyboardInput.readLine();
 			}
 			address.setHouseNumber(houseNumber);
-			
+
 			System.out.println("Street Name:");
 			String streetName = keyboardInput.readLine();
-			while(streetName.length()==0){
+			while (streetName.length() == 0) {
 				System.out.println("Please enter an appropriate street name.");
 				streetName = keyboardInput.readLine();
 			}
 			address.setStreetName(streetName);
-			
+
 			System.out.println("Landmark:");
 			String landmark = keyboardInput.readLine();
-			while(landmark.length()==0){
+			while (landmark.length() == 0) {
 				System.out.println("Please enter an appropriate landmark name.");
 				landmark = keyboardInput.readLine();
 			}
 			address.setStreetName(landmark);
-			
+
 			System.out.println("Area:");
 			String area = keyboardInput.readLine();
-			while(area.length()==0){
+			while (area.length() == 0) {
 				System.out.println("Please enter an appropriate area name.");
 				area = keyboardInput.readLine();
 			}
 			address.setStreetName(area);
-			
+
 			System.out.println("City:");
 			String city = keyboardInput.readLine();
-			while(city.length()==0){
+			while (city.length() == 0) {
 				System.out.println("Please enter an appropriate city name.");
 				city = keyboardInput.readLine();
 			}
 			address.setStreetName(city);
-			
+
 			System.out.println("State:");
 			String state = keyboardInput.readLine();
-			while(state.length()==0){
+			while (state.length() == 0) {
 				System.out.println("Please enter an appropriate state name.");
 				state = keyboardInput.readLine();
 			}
 			address.setStreetName(state);
-			
+
 			System.out.println("Country:");
 			String country = keyboardInput.readLine();
-			while(country.length()==0){
+			while (country.length() == 0) {
 				System.out.println("Please enter an appropriate country name.");
 				country = keyboardInput.readLine();
 			}
 			address.setStreetName(country);
-			
+
 			System.out.println("Pincode:");
 			String pinCode = keyboardInput.readLine();
 			while (!customer.verifyPincode(pinCode)) {
@@ -681,20 +700,6 @@ public class IdentityManagementUI {
 			System.out.println(exception.getMessage());
 		}
 
-	}
-
-	public boolean bankerLogin() {
-		System.out.println("Enter a login ID:");
-		String bankUser = scanner.next();
-		System.out.println("Enter password:");
-		String bankPassword = scanner.next();
-		if (banker.verifyLogin(bankUser, bankPassword)) {
-			System.out.println("Logged in!");
-		} else {
-			System.out.println("Please enter valid details");
-			bankerLogin();
-		}
-		return true;
 	}
 
 	public static void main(String[] args) {
