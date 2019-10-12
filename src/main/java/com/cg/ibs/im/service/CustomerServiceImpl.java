@@ -20,7 +20,7 @@ public class CustomerServiceImpl implements CustomerService {
 	private ApplicantBean applicant = new ApplicantBean();
 	private ApplicantDao applicantDao = new ApplicantDaoImpl();
 	private CustomerBean customer = new CustomerBean();
-	public CustomerDao customerDao = new CustomerDaoImpl();
+	private CustomerDao customerDao = new CustomerDaoImpl();
 
 	@Override
 	public boolean verifyName(String name) {

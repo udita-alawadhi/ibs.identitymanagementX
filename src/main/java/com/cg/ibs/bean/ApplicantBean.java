@@ -22,6 +22,7 @@ public class ApplicantBean {
 	private long applicantId;
 	private ApplicantStatus applicantStatus;
 	private LocalDate applicationDate;
+	private long linkedApplication;
 	Document[] document;
 	
 	public ApplicantBean(){
@@ -132,6 +133,14 @@ public class ApplicantBean {
 		this.panNumber = panNumber;
 	}
 	
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
+	
+	public AccountType getAccountType(){
+		return accountType;
+	}
+	
 	public void setApplicantId(long appID) {
 		this.applicantId = appID;
 	}
@@ -162,10 +171,6 @@ public class ApplicantBean {
 
 	public void setApplicationDate(LocalDate applicationDate) {
 		this.applicationDate = applicationDate;
-	}
-
-	public enum AccountType {
-		INDIVIDUAL, JOINT
 	}
 
 	public enum Gender {
@@ -210,8 +215,8 @@ public class ApplicantBean {
 		builder.append(aadharNumber);
 		builder.append("\nPAN Number=");
 		builder.append(panNumber);
-//		builder.append("\nAccount Type=");
-//		builder.append(accountType);
+		builder.append("\nAccount Type=");
+		builder.append(accountType);
 		builder.append("\nApplicant Id=");
 		builder.append(applicantId);
 		builder.append("\nApplicant Status=");
@@ -219,6 +224,14 @@ public class ApplicantBean {
 		builder.append("\nApplication Date=");
 		builder.append(applicationDate);
 		return builder.toString();
+	}
+
+	public long getLinkedApplication() {
+		return linkedApplication;
+	}
+
+	public void setLinkedApplication(long linkedApplication) {
+		this.linkedApplication = linkedApplication;
 	}
 	
 	

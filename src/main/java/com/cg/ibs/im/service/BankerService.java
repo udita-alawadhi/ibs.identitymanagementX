@@ -28,7 +28,7 @@ public interface BankerService {
 
 	boolean isApplicantPresent(long applicantId);
 
-	String displayDetails(long applicantId) throws IBSCustomException;
+	ApplicantBean displayDetails(long applicantId) throws IBSCustomException;
 
 	String generateUsername(long applicantId) throws IBSCustomException;
 

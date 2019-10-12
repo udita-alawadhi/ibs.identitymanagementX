@@ -9,20 +9,18 @@ public class AccountBean {
 	private Set<CustomerBean> accountHolders;
 	private BigDecimal currentBalance;
 	private String transactionPassword;
-	private List<TransactionBean> transactions;
-
+	
 	public AccountBean() {
 		super();
 	}
 
 	public AccountBean(String accountNumber, Set<CustomerBean> accountHolders, BigDecimal currentBalance,
-			String transactionPassword, List<TransactionBean> transactions) {
+			String transactionPassword) {
 		super();
 		this.accountNumber = accountNumber;
 		this.accountHolders = accountHolders;
 		this.currentBalance = currentBalance;
 		this.transactionPassword = transactionPassword;
-		this.transactions = transactions;
 	}
 
 	public String getAccountNumber() {
@@ -55,14 +53,6 @@ public class AccountBean {
 
 	public void setTransactionPassword(String transactionPassword) {
 		this.transactionPassword = transactionPassword;
-	}
-
-	public List<TransactionBean> getTransactions() {
-		return transactions;
-	}
-
-	public void setTransactions(List<TransactionBean> transactions) {
-		this.transactions = transactions;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -105,7 +106,9 @@ public class BankerSeviceImpl implements BankerService {
 		customer.setUserId(generateUsername(applicantId));
 		customer.setPassword(generatePassword(applicantId));
 		account = createNewAccount();
-		customer.setAccounts(account);
+		Set<AccountBean> accounts = new HashSet<AccountBean>();
+		accounts.add(account);
+		customer.setAccounts(accounts);
 		customer.setApplicant(applicant);
 
 		boolean result = customerDao.saveCustomer(customer);
@@ -124,9 +127,9 @@ public class BankerSeviceImpl implements BankerService {
 	}
 
 	@Override
-	public String displayDetails(long applicantId) throws IBSCustomException {
+	public ApplicantBean displayDetails(long applicantId) throws IBSCustomException {
 		ApplicantBean applicant = applicantDao.getApplicantDetails(applicantId);
-		return applicant.toString();
+		return applicant;
 
 	}
 	

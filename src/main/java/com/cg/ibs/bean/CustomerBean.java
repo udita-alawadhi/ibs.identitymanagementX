@@ -1,12 +1,12 @@
 package com.cg.ibs.bean;
 
-
+import java.util.Set;
 
 public class CustomerBean {
 	private String uci; // 16 digit Unique Customer ID
 	private String userId; // unique credentials created by customer for login
 	private String password; // unique credentials created by customer for login
-	private AccountBean account;
+	private Set<AccountBean> accounts;
 	private ApplicantBean applicant;
 	private int login=0;
 	public CustomerBean() {
@@ -37,12 +37,12 @@ public class CustomerBean {
 		this.password = password;
 	}
 
-	public AccountBean getAccount() {
-		return account;
+	public Set<AccountBean> getAccounts() {
+		return accounts;
 	}
 
-	public void setAccounts(AccountBean account) {
-		this.account = account;
+	public void setAccounts(Set<AccountBean> accounts) {
+		this.accounts = accounts;
 	}
 
 	public ApplicantBean getApplicant() {

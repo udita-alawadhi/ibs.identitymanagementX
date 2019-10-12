@@ -18,19 +18,19 @@ public class ApplicantDaoImpl implements ApplicantDao {
 	private static Map<Long, ApplicantBean> applicantDao = new HashMap<Long, ApplicantBean>();
 
 	static {
-		ApplicantBean applicant1 = new ApplicantBean();
-		applicant1.setFirstName("Sanjay");
-		applicant1.setLastName("Ramaswamy");
-		applicant1.setDob(LocalDate.now());
-		applicant1.setFatherName("Ramu");
-		applicant1.setMotherName("Sita");
-		applicant1.setGender(Gender.MALE);
-		applicant1.setMobileNumber("9553528684");
-		applicant1.setAlternateMobileNumber("9944995656");
-		applicant1.setEmailId("ramu999@gmail.com");
-		applicant1.setAadharNumber("1234 1256 4586");
-		applicant1.setPanNumber("ASEPY8911H");
-		applicant1.setApplicantId(12345);
+//		ApplicantBean applicant1 = new ApplicantBean();
+//		applicant1.setFirstName("Sanjay");
+//		applicant1.setLastName("Ramaswamy");
+//		applicant1.setDob(LocalDate.now());
+//		applicant1.setFatherName("Ramu");
+//		applicant1.setMotherName("Sita");
+//		applicant1.setGender(Gender.MALE);
+//		applicant1.setMobileNumber("9553528684");
+//		applicant1.setAlternateMobileNumber("9944995656");
+//		applicant1.setEmailId("ramu999@gmail.com");
+//		applicant1.setAadharNumber("1234 1256 4586");
+//		applicant1.setPanNumber("ASEPY8911H");
+//		applicant1.setApplicantId(12345);
 		AddressBean address1 = new AddressBean();
 		address1.setHouseNumber("3-177");// Address
 		address1.setStreetName("LIG Colony Road");
@@ -40,11 +40,11 @@ public class ApplicantDaoImpl implements ApplicantDao {
 		address1.setPincode("404112");
 		address1.setState("Maharastra");
 		address1.setCountry("India");
-		applicant1.setCurrentAddress(address1);
-		applicant1.setPermanentAddress(address1);
-		applicant1.setApplicantStatus(ApplicantStatus.APPROVED);
-		applicant1.setApplicationDate(LocalDate.now());
-		applicantDao.put(applicant1.getApplicantId(), applicant1);
+//		applicant1.setCurrentAddress(address1);
+//		applicant1.setPermanentAddress(address1);
+//		applicant1.setApplicantStatus(ApplicantStatus.APPROVED);
+//		applicant1.setApplicationDate(LocalDate.now());
+//		applicantDao.put(applicant1.getApplicantId(), applicant1);
 
 		ApplicantBean applicant2 = new ApplicantBean();
 		applicant2.setFirstName("Sagar");
