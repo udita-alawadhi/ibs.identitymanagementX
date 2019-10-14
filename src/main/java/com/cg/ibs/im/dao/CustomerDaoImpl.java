@@ -36,8 +36,13 @@ public class CustomerDaoImpl implements CustomerDao {
 		AccountBean account1 = new AccountBean();
 		account1.setAccountNumber("05100001111");
 		account1.setCurrentBalance(new BigDecimal("20048.32"));
+		AccountBean accountNew = new AccountBean();
+		accountNew.setAccountNumber("05554001111");
+		accountNew.setCurrentBalance(new BigDecimal("48.32"));
+		
 		Set<AccountBean> accounts1 = new HashSet<AccountBean>();
 		accounts1.add(account1);
+		accounts1.add(accountNew);
 		customer1.setAccounts(accounts1);
 		customer1.setLogin(1);
 			ApplicantBean applicant1 = new ApplicantBean();
@@ -63,6 +68,7 @@ public class CustomerDaoImpl implements CustomerDao {
 				address1.setPincode("404112");
 				address1.setState("Maharastra");
 				address1.setCountry("India");
+				applicant1.setExistingCustomer(true);
 				applicant1.setCurrentAddress(address1);
 				applicant1.setPermanentAddress(address1);
 			applicant1.setApplicantStatus(ApplicantStatus.APPROVED);

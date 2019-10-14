@@ -55,5 +55,7 @@ public interface CustomerService {
 
 	boolean upload(String srcPath);
 
+	long generatedApplicantId();
+
 
 }

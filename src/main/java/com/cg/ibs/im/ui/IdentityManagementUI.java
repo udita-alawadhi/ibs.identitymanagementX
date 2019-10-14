@@ -195,9 +195,17 @@ public class IdentityManagementUI {
 		Set<Long> pendingList = banker.viewPendingApplications();
 		while (pendingList.size() > 0) {
 			System.out.println("The list of the pending applicants is here:");
-			Iterator<Long> iterator = pendingList.iterator();
-			while (iterator.hasNext()) {
-				System.out.println(iterator.next());
+			
+			for(long applicantId: pendingList) {
+				try {
+					if(customer.getApplicantDetails(applicantId).getAccountType()==AccountType.JOINT && customer.getApplicantDetails(applicantId).getLinkedApplication() == 1111){
+							continue;
+					} else {
+						System.out.println(applicantId+"\t"+customer.getApplicantDetails(applicantId).getAccountType());
+					}
+				} catch(Exception exception) {
+					System.out.println(exception.getMessage());
+				}
 			}
 
 			System.out.println("Enter an application number to check details:");
@@ -230,7 +238,7 @@ public class IdentityManagementUI {
 				System.out.println("Enter file index to download: ");
 				int index = scanner.nextInt();
 				System.out.println("Enter a download folder loc: ");
-				String dwnLoc = scanner.next();
+				String dwnLoc = keyboardInput.readLine();
 				banker.download(dwnLoc, fnms.get(index));
 			} catch (Exception exception) {
 				System.out.println(exception.getMessage());
@@ -248,19 +256,60 @@ public class IdentityManagementUI {
 			}
 
 			if (choice == 1) {
+				
 				try {
 					ApplicantBean applicant = customer.getApplicantDetails(applicantId);
 					applicant.setApplicantStatus(ApplicantStatus.APPROVED);
-					customer.storeApplicantDetails(applicant);
-					CustomerBean newCustomer = banker.createNewCustomer(applicant);
-					System.out.println("The status has been approved for the applicant.\nCustomer ID: "
-							+ newCustomer.getUci() + "\n");
+					
+					if(applicant.getAccountType()==AccountType.JOINT) {
+						customer.storeApplicantDetails(applicant);
+						//check existing customer.
+						if(applicant.isExistingCustomer()) {
+							
+						} else {
+						CustomerBean newCustomer = banker.createNewCustomer(applicant);
+						System.out.println("The status has been approved for the applicant.\nCustomer ID for primary customer: "
+								+ newCustomer.getUci());
+						ApplicantBean secondaryApplicant = customer.getApplicantDetails(applicant.getLinkedApplication());
+						CustomerBean secondaryCustomer = banker.createNewCustomer(secondaryApplicant);
+						
+						//new customer's uci gets updated with new bank creation of secondary customer/
+						System.out.println("The status has been approved for the applicant.\nCustomer ID for primary customer: "
+								+ newCustomer.getUci());
+						
+						System.out.println("Customer ID for secondary holder: "+ secondaryCustomer.getUci());
 
-					// Add changes here!
-					Set<AccountBean> accounts = newCustomer.getAccounts();
-					for (AccountBean newAccount : accounts) {
-						System.out.println("Account generated: " + newAccount.getAccountNumber());
+						// Add changes here!
+						Set<AccountBean> accounts = newCustomer.getAccounts();
+						for (AccountBean newAccount : accounts) {
+							System.out.println("Account generated: " + newAccount.getAccountNumber());
+						}
+						}
+					} else {
+						if(applicant.isExistingCustomer()) {
+							AccountBean newAccount = banker.createNewAccount(applicant);
+							applicant.setApplicantStatus(ApplicantStatus.APPROVED);
+							
+							CustomerBean newCustomer = customer.getCustomerByApplicantId(applicant.getApplicantId());
+							Set<AccountBean> accounts = newCustomer.getAccounts();
+							accounts.add(newAccount);
+							customer.storeCustomerDetails(newCustomer);
+							
+							System.out.println("The application has been approved for Customer: " + newCustomer.getUci());
+						} else {
+						customer.storeApplicantDetails(applicant);
+						CustomerBean newCustomer = banker.createNewCustomer(applicant);
+						customer.storeCustomerDetails(newCustomer);
+						System.out.println("The status has been approved for the applicant.\nCustomer ID for primary customer: "
+								+ newCustomer.getUci());
+						Set<AccountBean> accounts = newCustomer.getAccounts();
+						for (AccountBean newAccount : accounts) {
+							System.out.println("Account generated: " + newAccount.getAccountNumber());
+						}
+						}
+						applicant.setApplicantStatus(ApplicantStatus.APPROVED);
 					}
+					
 
 				} catch (Exception exception) {
 					System.out.println(exception.getMessage());
@@ -297,9 +346,13 @@ public class IdentityManagementUI {
 	void approvedApplications() {
 		Set<Long> approvedList = banker.viewApprovedApplications();
 		if (approvedList.size() > 0) {
-			Iterator<Long> iterator = approvedList.iterator();
-			while (iterator.hasNext()) {
-				System.out.println(iterator.next());
+			System.out.println("The list of the approved applications is here: ");
+			for(long applicantId: approvedList) {
+				try {
+				System.out.println(applicantId+"\t"+customer.getApplicantDetails(applicantId).getAccountType());
+				} catch(Exception exception) {
+					System.out.println(exception.getMessage());
+				}
 			}
 		} else {
 			System.out.println("There are no approved applications.");
@@ -309,9 +362,13 @@ public class IdentityManagementUI {
 	void deniedApplications() {
 		Set<Long> deniedList = banker.viewDeniedApplications();
 		if (deniedList.size() > 0) {
-			Iterator<Long> iterator = deniedList.iterator();
-			while (iterator.hasNext()) {
-				System.out.println(iterator.next());
+			System.out.println("The list of the denied applications is here: ");
+			for(long applicantId: deniedList) {
+				try {
+				System.out.println(applicantId+"\t"+customer.getApplicantDetails(applicantId).getAccountType());
+				} catch(Exception exception) {
+					System.out.println(exception.getMessage());
+				}
 			}
 		} else {
 			System.out.println("There are no denied applications.");
@@ -335,6 +392,7 @@ public class IdentityManagementUI {
 				ApplicantBean applicant1 = new ApplicantBean();
 				newApplication(applicant1);
 				applicant1.setAccountType(AccountType.INDIVIDUAL);
+				applicant1.setApplicantStatus(ApplicantStatus.PENDING);
 				customer.saveApplicantDetails(applicant1);
 				System.out.println(
 						"Keep updated with your status.\nYour applicant id " + "is " + applicant1.getApplicantId());
@@ -349,8 +407,11 @@ public class IdentityManagementUI {
 				System.out.println("Enter details for the secondary customer: ");
 				newApplication(applicant2);
 				applicant2.setAccountType(AccountType.JOINT);
+				applicant2.setLinkedApplication(1111); //with linked applicant id = 1111, the customer is secondary
 				customer.saveApplicantDetails(applicant2);
 				applicant1.setLinkedApplication(applicant2.getApplicantId());
+				applicant1.setAccountType(AccountType.JOINT);
+				applicant1.setApplicantStatus(ApplicantStatus.PENDING);
 				customer.saveApplicantDetails(applicant1);
 
 				System.out.println(
@@ -544,8 +605,13 @@ public class IdentityManagementUI {
 		}
 		applicant.setPanNumber(panNumber);
 
+		uploadDocuments();
+	}
+	
+	public void uploadDocuments() {
 		System.out.println("Upload two Government ID proofs");
 
+		BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			System.out.println("Enter the Path of Document 1 ");
 			String filePath = keyboardInput.readLine();
@@ -691,10 +757,31 @@ public class IdentityManagementUI {
 							if (typeOfAccount.equals("1")) {
 								// create
 								long applicantId = newCustomer.getApplicant().getApplicantId();
-								ApplicantBean newApplicant =customer.getApplicantDetails(applicantId);
-								banker.gene
+								ApplicantBean newApplicant = newCustomer.getApplicant();
+								
+								System.out.println("Document verification required for new account registration");
+								System.out.println("-----------------------------------------------------------");
+								uploadDocuments();
+								
+								newApplicant.setAccountType(AccountType.INDIVIDUAL);
+								newApplicant.setApplicantId(customer.generatedApplicantId());
+								newApplicant.setApplicantStatus(ApplicantStatus.PENDING);
+								customer.saveApplicantDetails(newApplicant);
+								System.out.println("Documents have been sent to the bank. You can check your status at "
+										+ "applicant ID: " + newApplicant.getApplicantId());
+								
 							} else if (typeOfAccount.equals("2")) {
 								// create
+								System.out.println("You will be the primary holder of this account.");
+								System.out.println("-----------------------------------------------");
+								System.out.println("Kindly enter details for the secondary customer.");
+								ApplicantBean newApplicant = new ApplicantBean();
+								newApplication(newApplicant);
+								newApplicant.setAccountType(AccountType.JOINT);
+								customer.saveApplicantDetails(newApplicant);
+								System.out.println("Keep updated with your status.\nYour applicant id " + "is "
+										+ newApplicant.getApplicantId());
+
 							}
 						} catch (Exception exception) {
 							System.out.println(exception.getMessage());
@@ -769,6 +856,11 @@ public class IdentityManagementUI {
 			System.out.println("Your application status is: " + status);
 
 			if (status == ApplicantStatus.APPROVED) {
+				if(customer.getApplicantDetails(applicantId).getAccountType()== AccountType.JOINT) {
+					// print uci, username and password for both accounts.
+					
+					//print a common account number generated for both accounts/
+				} else {
 				CustomerBean newCustomer = customer.getCustomerByApplicantId(applicantId);
 				String uci = newCustomer.getUci();
 				String userId = newCustomer.getUserId();
@@ -780,6 +872,7 @@ public class IdentityManagementUI {
 				Set<AccountBean> accounts = newCustomer.getAccounts();
 				for (AccountBean account : accounts) {
 					System.out.println("\nAccount Number: " + account.getAccountNumber());
+				}
 				}
 				// get Last account number. the last generated
 				// String accountNumber = account.getAccountNumber();

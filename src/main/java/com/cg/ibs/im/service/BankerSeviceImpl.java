@@ -23,11 +23,12 @@ import com.cg.ibs.im.exception.IBSException;
 public class BankerSeviceImpl implements BankerService {
 	CustomerDao customerDao = new CustomerDaoImpl();
 	ApplicantDao applicantDao = new ApplicantDaoImpl();
+	CustomerService customerService = new CustomerServiceImpl();
 	CustomerBean customer = new CustomerBean();
 	AccountBean account = new AccountBean();
 
 	private static BigInteger uciConstant = new BigInteger("1111222210000000");
-	private static BigInteger accountVariable = new BigInteger("05010010000");
+	private static BigInteger accountVariable = new BigInteger("55010010000");
 
 	public static String generateUci() {
 		uciConstant = uciConstant.add(new BigInteger("1"));
@@ -105,10 +106,15 @@ public class BankerSeviceImpl implements BankerService {
 		customer.setUci(customerUci);
 		customer.setUserId(generateUsername(applicantId));
 		customer.setPassword(generatePassword(applicantId));
-		account = createNewAccount();
 		Set<AccountBean> accounts = new HashSet<AccountBean>();
-		accounts.add(account);
-		customer.setAccounts(accounts);
+		if(applicant.getLinkedApplication()!=1111) {
+			account = createNewAccount(applicant);
+			accounts.add(account);
+			customer.setAccounts(accounts);
+		} else {
+			//get account number of linkedApplicantId
+		}
+		applicant.setExistingCustomer(true);
 		customer.setApplicant(applicant);
 
 		boolean result = customerDao.saveCustomer(customer);
@@ -117,14 +123,17 @@ public class BankerSeviceImpl implements BankerService {
 		else
 			throw new IBSCustomException(IBSException.customerNotPresent);
 	}
-
+	
+	
 	@Override
-	public AccountBean createNewAccount() {
+	public AccountBean createNewAccount(ApplicantBean newApplicant) {
 		account.setAccountNumber(generateAccountNumber());
 		account.setCurrentBalance(new BigDecimal("0.00"));
 		// set other details
 		return account;
 	}
+	
+	
 
 	@Override
 	public ApplicantBean displayDetails(long applicantId) throws IBSCustomException {

@@ -18,11 +18,11 @@ public class ApplicantBean {
 	private String aadharNumber;
 	private String panNumber;
 	private AccountType accountType;
-	private static long applicationId=10000;						//5 digit applicant ID
 	private long applicantId;
 	private ApplicantStatus applicantStatus;
 	private LocalDate applicationDate;
 	private long linkedApplication;
+	private boolean existingCustomer;
 	Document[] document;
 	
 	public ApplicantBean(){
@@ -180,10 +180,6 @@ public class ApplicantBean {
 	public enum ApplicantStatus{
 		PENDING, APPROVED, DENIED
 	}
-
-	public static long generateApplicantId(){
-		return ++applicationId;
-	}
 	
 	@Override
 	public String toString() {
@@ -223,6 +219,12 @@ public class ApplicantBean {
 		builder.append(applicantStatus);
 		builder.append("\nApplication Date=");
 		builder.append(applicationDate);
+		builder.append("\nExisting Customer= ");
+		if(existingCustomer==false) {
+			builder.append("No");
+		} else {
+			builder.append("Yes");
+		}
 		return builder.toString();
 	}
 
@@ -232,6 +234,14 @@ public class ApplicantBean {
 
 	public void setLinkedApplication(long linkedApplication) {
 		this.linkedApplication = linkedApplication;
+	}
+
+	public boolean isExistingCustomer() {
+		return existingCustomer;
+	}
+
+	public void setExistingCustomer(boolean existingCustomer) {
+		this.existingCustomer = existingCustomer;
 	}
 	
 	

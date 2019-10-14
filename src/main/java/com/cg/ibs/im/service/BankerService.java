@@ -32,9 +32,9 @@ public interface BankerService {
 
 	String generateUsername(long applicantId) throws IBSCustomException;
 
-	AccountBean createNewAccount();
-
 	boolean download(String destPath, String fileName);
 
 	List<String> getFilesAvialable();
+
+	AccountBean createNewAccount(ApplicantBean newApplicant);
 }

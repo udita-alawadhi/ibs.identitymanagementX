@@ -21,7 +21,17 @@ public class CustomerServiceImpl implements CustomerService {
 	private ApplicantDao applicantDao = new ApplicantDaoImpl();
 	private CustomerBean customer = new CustomerBean();
 	private CustomerDao customerDao = new CustomerDaoImpl();
-
+	static long applicationId=10000;						//5 digit applicant ID
+	
+	public static long generateApplicantId(){
+		return ++applicationId;
+	}
+	
+	@Override
+	public long generatedApplicantId() {
+		return generateApplicantId();
+	}
+	
 	@Override
 	public boolean verifyName(String name) {
 		return name.matches("[a-zA-z ]+");
@@ -164,7 +174,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		boolean result = false;
 		if (applicant != null) {
-			applicant.setApplicantId(ApplicantBean.generateApplicantId());
+			applicant.setApplicantId(generateApplicantId());
 			applicantDao.saveApplicant(applicant);
 			result = true;
 		} else {
