@@ -37,4 +37,6 @@ public interface BankerService {
 	List<String> getFilesAvialable();
 
 	AccountBean createNewAccount(ApplicantBean newApplicant);
+
+	AccountBean createNewAccount(CustomerBean newCustomer);
 }

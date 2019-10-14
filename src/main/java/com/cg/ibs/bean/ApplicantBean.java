@@ -18,6 +18,7 @@ public class ApplicantBean {
 	private String aadharNumber;
 	private String panNumber;
 	private AccountType accountType;
+	private AccountHolder accountHolder = AccountHolder.PRIMARY; //change
 	private long applicantId;
 	private ApplicantStatus applicantStatus;
 	private LocalDate applicationDate;
@@ -242,6 +243,14 @@ public class ApplicantBean {
 
 	public void setExistingCustomer(boolean existingCustomer) {
 		this.existingCustomer = existingCustomer;
+	}
+
+	public AccountHolder getAccountHolder() {
+		return accountHolder;
+	}
+
+	public void setAccountHolder(AccountHolder accountHolder) {
+		this.accountHolder = accountHolder;
 	}
 	
 	

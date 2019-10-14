@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.cg.ibs.bean.AccountType;
 import com.cg.ibs.bean.AddressBean;
 import com.cg.ibs.bean.ApplicantBean;
 import com.cg.ibs.bean.ApplicantBean.ApplicantStatus;
@@ -54,6 +55,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
 		applicant2.setMotherName("Rita");
 		applicant2.setGender(Gender.MALE);
 		applicant2.setMobileNumber("9453558684");
+		applicant2.setAccountType(AccountType.INDIVIDUAL);
 		applicant2.setAlternateMobileNumber("9526499565");
 		applicant2.setEmailId("Sagar99@gmail.com");
 		applicant2.setAadharNumber("1534 1356 4559");
@@ -81,6 +83,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
 		applicant3.setFatherName("Lakshman");
 		applicant3.setMotherName("Kumari");
 		applicant3.setGender(Gender.FEMALE);
+		applicant3.setAccountType(AccountType.INDIVIDUAL);
 		applicant3.setMobileNumber("9885448684");
 		applicant3.setAlternateMobileNumber("9956512345");
 		applicant3.setEmailId("Sagarika1801@gmail.com");
@@ -100,6 +103,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
 		applicant4.setFatherName("Ramesh");
 		applicant4.setMotherName("Anu");
 		applicant4.setGender(Gender.MALE);
+		applicant4.setAccountType(AccountType.INDIVIDUAL);
 		applicant4.setMobileNumber("9868466455");
 		applicant4.setAlternateMobileNumber("9956500123");
 		applicant4.setEmailId("Surbith129@gmail.com");

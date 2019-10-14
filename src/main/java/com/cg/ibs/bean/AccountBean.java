@@ -8,7 +8,16 @@ public class AccountBean {
 	private Set<CustomerBean> accountHolders;
 	private BigDecimal currentBalance;
 	private String transactionPassword;
+	private AccountType accountType;
 	
+	public AccountType getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
+
 	public AccountBean() {
 		super();
 	}

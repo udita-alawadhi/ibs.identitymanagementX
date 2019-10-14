@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.cg.ibs.bean.AccountBean;
+import com.cg.ibs.bean.AccountType;
 import com.cg.ibs.bean.AddressBean;
 import com.cg.ibs.bean.ApplicantBean;
 import com.cg.ibs.bean.ApplicantBean.ApplicantStatus;
@@ -53,6 +54,7 @@ public class CustomerDaoImpl implements CustomerDao {
 			applicant1.setFatherName("Kamal Alawadhi");
 			applicant1.setMotherName("Poonam Alawadhi");
 			applicant1.setGender(Gender.FEMALE);
+			applicant1.setAccountType(AccountType.INDIVIDUAL);
 			applicant1.setMobileNumber("9553528684");
 			applicant1.setAlternateMobileNumber("9944995656");
 			applicant1.setEmailId("udita@gmail.com");
@@ -95,6 +97,7 @@ public class CustomerDaoImpl implements CustomerDao {
 			applicant2.setFatherName("KAL");
 			applicant2.setMotherName("XYZ");
 			applicant2.setGender(Gender.FEMALE);
+			applicant2.setAccountType(AccountType.INDIVIDUAL);
 			applicant2.setMobileNumber("9223528684");
 			applicant2.setAlternateMobileNumber("9941195656");
 			applicant2.setEmailId("safe@outlook.com");

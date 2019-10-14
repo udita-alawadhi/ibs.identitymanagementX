@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.cg.ibs.bean.AccountBean;
+import com.cg.ibs.bean.AccountHolder;
+import com.cg.ibs.bean.AccountType;
 import com.cg.ibs.bean.ApplicantBean;
 import com.cg.ibs.bean.ApplicantBean.ApplicantStatus;
 import com.cg.ibs.bean.CustomerBean;
@@ -99,28 +101,37 @@ public class BankerSeviceImpl implements BankerService {
 
 	@Override
 	public CustomerBean createNewCustomer(ApplicantBean applicant) throws IBSCustomException {
-
-		long applicantId = applicant.getApplicantId();
-
+		
+		System.out.println("reached function");
+		long applicantId = applicant.getApplicantId(); 
 		String customerUci = generateUci();
 		customer.setUci(customerUci);
 		customer.setUserId(generateUsername(applicantId));
 		customer.setPassword(generatePassword(applicantId));
+		System.out.println("reached accounts");
 		Set<AccountBean> accounts = new HashSet<AccountBean>();
-		if(applicant.getLinkedApplication()!=1111) {
+		if(applicant.getAccountHolder()!=AccountHolder.SECONDARY) {
 			account = createNewAccount(applicant);
+			System.out.println("accountnumber is "+account.getAccountNumber());
+			account.setAccountType(AccountType.JOINT);
+			System.out.println("bokwaaaas");
 			accounts.add(account);
 			customer.setAccounts(accounts);
+			System.out.println(customer.getAccounts());
 		} else {
-			//get account number of linkedApplicantId
+			CustomerBean customer2 = customerService.getCustomerByApplicantId(applicant.getLinkedApplication());
+			customer.setAccounts(customer2.getAccounts());//get account number of linkedApplicantId
+			
 		}
+		System.out.println("out of accounts loop");
 		applicant.setExistingCustomer(true);
 		customer.setApplicant(applicant);
 
 		boolean result = customerDao.saveCustomer(customer);
-		if (result == true)
+		if (result == true) {
+			System.out.println("returning....");
 			return customer;
-		else
+		} else
 			throw new IBSCustomException(IBSException.customerNotPresent);
 	}
 	
@@ -129,9 +140,19 @@ public class BankerSeviceImpl implements BankerService {
 	public AccountBean createNewAccount(ApplicantBean newApplicant) {
 		account.setAccountNumber(generateAccountNumber());
 		account.setCurrentBalance(new BigDecimal("0.00"));
+		System.out.println("running");
 		// set other details
 		return account;
 	}
+	
+	@Override
+	public AccountBean createNewAccount(CustomerBean newCustomer) {
+		account.setAccountNumber(generateAccountNumber());
+		account.setCurrentBalance(new BigDecimal("0.00"));
+		// set other details
+		return account;
+	}
+	
 	
 	
 
