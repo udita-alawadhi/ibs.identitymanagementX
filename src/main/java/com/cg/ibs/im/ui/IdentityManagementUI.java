@@ -29,7 +29,6 @@ import com.cg.ibs.im.service.CustomerServiceImpl;
 
 public class IdentityManagementUI {
 	static Scanner scanner;
-
 	private CustomerService customer = new CustomerServiceImpl();
 	private BankerService banker = new BankerSeviceImpl();
 	private AccountBean account = new AccountBean();
@@ -236,20 +235,30 @@ public class IdentityManagementUI {
 					System.out.println(secondaryAccountHolder.toString());
 				}
 				List<String> fnms = banker.getFilesAvialable();
-				for (int i = 0; i < fnms.size(); i++) {
+				for (int i = 1; i <= fnms.size(); i++) {
 					System.out.println(i + "\t" + fnms.get(i));
 				}
-				System.out.println("Enter file index to download: ");
-				int index = scanner.nextInt();
-				System.out.println("Enter a download folder loc: ");
-				String dwnLoc = keyboardInput.readLine();
-				banker.download(dwnLoc, fnms.get(index));
-
-				System.out.println("Enter another file index to download: ");
-				int index2 = scanner.nextInt();
-				System.out.println("Enter a download folder loc for this file: ");
-				String dwnLoc2 = keyboardInput.readLine();
-				banker.download(dwnLoc2, fnms.get(index2));
+				int index = -1;
+				do {
+					System.out.println("Enter file index to download: ");
+					index = scanner.nextInt();
+					if (index <= fnms.size() && index>0) {
+						System.out.println("Enter a download folder loc: ");
+						String dwnLoc = scanner.next();
+						banker.download(dwnLoc, fnms.get(index));
+						break;
+					} else {
+						System.out.println(index);
+						System.out.println("File doesn't exist");
+					}
+				} while (index >= fnms.size());
+				
+				// System.out.println("Enter another file index to download: ");
+				// int index2 = scanner.nextInt();
+				// System.out.println("Enter a download folder loc for this
+				// file: ");
+				// String dwnLoc2 = keyboardInput.readLine();
+				// banker.download(dwnLoc2, fnms.get(index2));
 			} catch (Exception exception) {
 				System.out.println(exception.getMessage());
 			}
@@ -280,27 +289,33 @@ public class IdentityManagementUI {
 
 						} else {
 							CustomerBean primaryCustomer = banker.createNewCustomer(applicant);
-							System.out.println("UCI for primary customer: " + primaryCustomer.getUci());
 
 							long secondaryApplicantId = applicant.getLinkedApplication();
-							ApplicantBean secondaryApplicant = customer.getApplicantDetails(secondaryApplicantId);
-							secondaryApplicant.setApplicantStatus(ApplicantStatus.APPROVED);
 
+							ApplicantBean secondaryApplicant = customer.getApplicantDetails(secondaryApplicantId);
+
+							customer.saveApplicantDetails(secondaryApplicant);
 							CustomerBean secondaryCustomer = banker.createNewCustomer(secondaryApplicant);
+
+							System.out.println("UCI for primary customer: " + primaryCustomer.getUci());
 							System.out.println("UCI for secondary customer: " + secondaryCustomer.getUci());
-							
-							//working ->
-							System.out.println(primaryCustomer.getAccounts());
+
+							// customer.storeApplicantDetails(secondaryApplicant);
+
+							// working ->
 							for (AccountBean accountBean : primaryCustomer.getAccounts()) {
 								System.out.println("Account generated: " + accountBean.getAccountNumber());
-								System.out.println(accountBean.getAccountType());
+								System.out.println("Account type: " + accountBean.getAccountType());
 							}
 
 						}
+
+						// customer.saveApplicantDetails(applicant);
 					} else {
 						if (applicant.isExistingCustomer()) {
 							AccountBean newAccount = banker.createNewAccount(applicant);
 							applicant.setApplicantStatus(ApplicantStatus.APPROVED);
+							customer.saveApplicantDetails(applicant);
 							CustomerBean newCustomer = customer.getCustomerByApplicantId(applicant.getApplicantId());
 							Set<AccountBean> accounts = newCustomer.getAccounts();
 							accounts.add(newAccount);
@@ -428,16 +443,7 @@ public class IdentityManagementUI {
 				applicant2.setAccountType(AccountType.JOINT);
 				applicant2.setAccountHolder(AccountHolder.SECONDARY);
 				applicant2.setApplicantStatus(ApplicantStatus.PENDING);
-				applicant2.setLinkedApplication(applicant1.getApplicantId()); // with
-																				// linked
-																				// applicant
-																				// id
-																				// =
-																				// 1111,
-																				// the
-																				// customer
-																				// is
-																				// secondary
+				applicant2.setLinkedApplication(applicant1.getApplicantId());
 				customer.saveApplicantDetails(applicant2);
 				applicant1.setLinkedApplication(applicant2.getApplicantId());
 
@@ -814,6 +820,8 @@ public class IdentityManagementUI {
 								// newApplicant.setApplicantId(customer.generatedApplicantId());
 								newApplicant.setApplicantStatus(ApplicantStatus.PENDING);
 								customer.saveApplicantDetails(newApplicant);
+								newCustomer.setApplicant(newApplicant);
+								customer.storeCustomerDetails(newCustomer);
 								System.out.println("Documents have been sent to the bank. You can check your status at "
 										+ "applicant ID: " + newApplicant.getApplicantId());
 
@@ -903,10 +911,13 @@ public class IdentityManagementUI {
 					System.out.println("\nUser ID: " + userId);
 					System.out.println("\nPassword: " + password);
 
+					System.out.println("------------------------");
+					long linkedApplicantId = customer.getApplicantDetails(applicantId).getLinkedApplication();
+					CustomerBean secondaryCustomer = customer.getCustomerByApplicantId(linkedApplicantId);
 					System.out.println("For secondary customer: ");
-					String secondaryUci = newCustomer.getUci();
-					String secondaryUserId = newCustomer.getUserId();
-					String secondaryPassword = newCustomer.getPassword();
+					String secondaryUci = secondaryCustomer.getUci();
+					String secondaryUserId = secondaryCustomer.getUserId();
+					String secondaryPassword = secondaryCustomer.getPassword();
 					System.out.println("Login using the following details:");
 					System.out.println("\nUCI: " + secondaryUci);
 					System.out.println("\nUser ID: " + secondaryUserId);

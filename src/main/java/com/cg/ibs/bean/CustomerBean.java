@@ -60,4 +60,25 @@ public class CustomerBean {
 	public void setLogin(int login) {
 		this.login = login;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("CustomerBean [uci=");
+		builder.append(uci);
+		builder.append(", userId=");
+		builder.append(userId);
+		builder.append(", password=");
+		builder.append(password);
+		builder.append(", accounts=");
+		builder.append(accounts);
+		builder.append(", applicant=");
+		builder.append(applicant);
+		builder.append(", login=");
+		builder.append(login);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
 }

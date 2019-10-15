@@ -173,8 +173,11 @@ public class CustomerServiceImpl implements CustomerService {
 	public boolean saveApplicantDetails(ApplicantBean applicant) throws IBSCustomException {
 
 		boolean result = false;
-		if (applicant != null) {
+		if(applicant.getApplicantId()==0){
 			applicant.setApplicantId(generateApplicantId());
+		}
+		if (applicant != null) {
+			
 			applicantDao.saveApplicant(applicant);
 			result = true;
 		} else {

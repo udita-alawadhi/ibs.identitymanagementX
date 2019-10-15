@@ -101,35 +101,31 @@ public class BankerSeviceImpl implements BankerService {
 
 	@Override
 	public CustomerBean createNewCustomer(ApplicantBean applicant) throws IBSCustomException {
-		
-		System.out.println("reached function");
+		customer = new CustomerBean();
 		long applicantId = applicant.getApplicantId(); 
 		String customerUci = generateUci();
-		customer.setUci(customerUci);
+		customer.setUci(customerUci);	
+		customer.setApplicant(applicant);	
 		customer.setUserId(generateUsername(applicantId));
 		customer.setPassword(generatePassword(applicantId));
-		System.out.println("reached accounts");
 		Set<AccountBean> accounts = new HashSet<AccountBean>();
 		if(applicant.getAccountHolder()!=AccountHolder.SECONDARY) {
 			account = createNewAccount(applicant);
-			System.out.println("accountnumber is "+account.getAccountNumber());
 			account.setAccountType(AccountType.JOINT);
-			System.out.println("bokwaaaas");
 			accounts.add(account);
 			customer.setAccounts(accounts);
-			System.out.println(customer.getAccounts());
 		} else {
 			CustomerBean customer2 = customerService.getCustomerByApplicantId(applicant.getLinkedApplication());
 			customer.setAccounts(customer2.getAccounts());//get account number of linkedApplicantId
 			
 		}
-		System.out.println("out of accounts loop");
 		applicant.setExistingCustomer(true);
+		applicant.setApplicantStatus(ApplicantStatus.APPROVED);
+		customerService.saveApplicantDetails(applicant);
 		customer.setApplicant(applicant);
 
 		boolean result = customerDao.saveCustomer(customer);
 		if (result == true) {
-			System.out.println("returning....");
 			return customer;
 		} else
 			throw new IBSCustomException(IBSException.customerNotPresent);
@@ -140,7 +136,7 @@ public class BankerSeviceImpl implements BankerService {
 	public AccountBean createNewAccount(ApplicantBean newApplicant) {
 		account.setAccountNumber(generateAccountNumber());
 		account.setCurrentBalance(new BigDecimal("0.00"));
-		System.out.println("running");
+		account.setAccountType(newApplicant.getAccountType());
 		// set other details
 		return account;
 	}
