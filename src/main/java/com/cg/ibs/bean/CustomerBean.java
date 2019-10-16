@@ -1,9 +1,10 @@
 package com.cg.ibs.bean;
 
+import java.math.BigInteger;
 import java.util.Set;
 
 public class CustomerBean {
-	private String uci; // 16 digit Unique Customer ID
+	private BigInteger uci; // 16 digit Unique Customer ID
 	private String userId; // unique credentials created by customer for login
 	private String password; // unique credentials created by customer for login
 	private Set<AccountBean> accounts;
@@ -13,11 +14,11 @@ public class CustomerBean {
 		super();
 	}
 
-	public String getUci() {
+	public BigInteger getUci() {
 		return uci;
 	}
 
-	public void setUci(String uci) {
+	public void setUci(BigInteger uci) {
 		this.uci = uci;
 	}
 

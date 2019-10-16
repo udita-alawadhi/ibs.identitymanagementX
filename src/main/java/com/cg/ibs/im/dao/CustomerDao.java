@@ -1,5 +1,6 @@
 package com.cg.ibs.im.dao;
 
+import java.math.BigInteger;
 import java.util.Set;
 
 import com.cg.ibs.bean.CustomerBean;
@@ -12,7 +13,7 @@ public interface CustomerDao {
 	
 	CustomerBean getCustomerDetails(String uci) throws IBSCustomException;
 	
-	Set<String> getAllCustomers();
+	Set<BigInteger> getAllCustomers();
 
 	CustomerBean getCustomerByApplicantId(long applicantId);
 

@@ -32,16 +32,14 @@ public class BankerSeviceImpl implements BankerService {
 	private static BigInteger uciConstant = new BigInteger("1111222210000000");
 	private static BigInteger accountVariable = new BigInteger("55010010000");
 
-	public static String generateUci() {
+	public static BigInteger generateUci() {
 		uciConstant = uciConstant.add(new BigInteger("1"));
-		String str = uciConstant.toString();
-		return str;
+		return uciConstant;
 	}
 
-	public static String generateAccountNumber() {
+	public static BigInteger generateAccountNumber() {
 		accountVariable = accountVariable.add(new BigInteger("1"));
-		String str = accountVariable.toString();
-		return str;
+		return accountVariable;
 	}
 
 	@Override
@@ -103,7 +101,7 @@ public class BankerSeviceImpl implements BankerService {
 	public CustomerBean createNewCustomer(ApplicantBean applicant) throws IBSCustomException {
 		customer = new CustomerBean();
 		long applicantId = applicant.getApplicantId(); 
-		String customerUci = generateUci();
+		BigInteger customerUci = generateUci();
 		customer.setUci(customerUci);	
 		customer.setApplicant(applicant);	
 		customer.setUserId(generateUsername(applicantId));

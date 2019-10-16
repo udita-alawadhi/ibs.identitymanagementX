@@ -1,14 +1,19 @@
 package com.cg.ibs.bean;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Set;
 
 public class AccountBean {
-	private String accountNumber;
+	private BigInteger accountNumber;
 	private Set<CustomerBean> accountHolders;
 	private BigDecimal currentBalance;
-	private String transactionPassword;
 	private AccountType accountType;
+
+	public AccountBean() {
+		super();
+	}
+
 	
 	public AccountType getAccountType() {
 		return accountType;
@@ -18,25 +23,12 @@ public class AccountBean {
 		this.accountType = accountType;
 	}
 
-	public AccountBean() {
-		super();
-	}
-
-	public AccountBean(String accountNumber, Set<CustomerBean> accountHolders, BigDecimal currentBalance,
-			String transactionPassword) {
-		super();
-		this.accountNumber = accountNumber;
-		this.accountHolders = accountHolders;
-		this.currentBalance = currentBalance;
-		this.transactionPassword = transactionPassword;
-	}
-
-	public String getAccountNumber() {
+	public BigInteger getAccountNumber() {
 		return accountNumber;
 	}
 
-	public void setAccountNumber(String string) {
-		this.accountNumber = string;
+	public void setAccountNumber(BigInteger accountNumber) {
+		this.accountNumber = accountNumber;
 	}
 
 	public Set<CustomerBean> getAccountHolders() {
@@ -55,14 +47,6 @@ public class AccountBean {
 		this.currentBalance = currentBalance;
 	}
 
-	public String getTransactionPassword() {
-		return transactionPassword;
-	}
-
-	public void setTransactionPassword(String transactionPassword) {
-		this.transactionPassword = transactionPassword;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -70,10 +54,10 @@ public class AccountBean {
 		builder.append(accountNumber);
 		builder.append(", currentBalance=");
 		builder.append(currentBalance);
+		builder.append(", Account Type: ");
+		builder.append(accountType);
 		builder.append("]");
 		return builder.toString();
 	}
-
-	
 
 }

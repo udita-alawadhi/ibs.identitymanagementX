@@ -2,6 +2,7 @@ package com.cg.ibs.im.ui;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
@@ -34,6 +35,7 @@ public class IdentityManagementUI {
 	private AccountBean account = new AccountBean();
 	private ApplicantBean applicant = new ApplicantBean();
 	private CustomerBean newCustomer = new CustomerBean();
+	BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
 
 	void init() {
 		UserMenu choice = null;
@@ -45,10 +47,22 @@ public class IdentityManagementUI {
 				System.out.println((menu.ordinal()) + 1 + "\t" + menu);
 			}
 			System.out.println("Choice");
-			int ordinal = scanner.nextInt();
+			int ordinalInt = 0;
+			String ordinal = scanner.next();
 
-			if (0 < (ordinal) && UserMenu.values().length >= (ordinal)) {
-				choice = UserMenu.values()[ordinal - 1];
+			boolean check = true;
+			while (check) {
+				if (ordinal.equals("1") || ordinal.equals("2") || ordinal.equals("3") || ordinal.equals("4")) {
+					ordinalInt = Integer.parseInt(ordinal);
+					check = false;
+				} else {
+					System.out.println("Please Re-enter: ");
+					ordinal = scanner.next();
+				}
+			}
+			
+			if (0 < (ordinalInt) && UserMenu.values().length >= (ordinalInt)) {
+				choice = UserMenu.values()[ordinalInt - 1];
 				switch (choice) {
 				case BANKER:
 					try {
@@ -107,10 +121,22 @@ public class IdentityManagementUI {
 					System.out.println(menu.ordinal() + 1 + "\t" + menu);
 				}
 				System.out.println("Choices:");
-				int ordinal = scanner.nextInt();
+				int ordinalInt = 0;
+				String ordinal = scanner.next();
 
-				if (0 < ordinal && BankerAction.values().length >= ordinal) {
-					choice = BankerAction.values()[ordinal - 1];
+				boolean check = true;
+				while (check) {
+					if (ordinal.equals("1") || ordinal.equals("2") || ordinal.equals("3") || ordinal.equals("4")) {
+						ordinalInt = Integer.parseInt(ordinal);
+						check = false;
+					} else {
+						System.out.println("Please Re-enter: ");
+						ordinal = scanner.next();
+					}
+				}
+				
+				if (0 < ordinalInt && BankerAction.values().length >= ordinalInt) {
+					choice = BankerAction.values()[ordinalInt - 1];
 					switch (choice) {
 					case VIEW_PENDING_DETAILS:
 						try {
@@ -234,15 +260,15 @@ public class IdentityManagementUI {
 					ApplicantBean secondaryAccountHolder = banker.displayDetails(secondaryHolder);
 					System.out.println(secondaryAccountHolder.toString());
 				}
+				int index = -1;
 				List<String> fnms = banker.getFilesAvialable();
-				for (int i = 1; i <= fnms.size(); i++) {
+				for (int i = 0; i < fnms.size(); i++) {
 					System.out.println(i + "\t" + fnms.get(i));
 				}
-				int index = -1;
 				do {
 					System.out.println("Enter file index to download: ");
 					index = scanner.nextInt();
-					if (index <= fnms.size() && index>0) {
+					if (index < fnms.size()) {
 						System.out.println("Enter a download folder loc: ");
 						String dwnLoc = scanner.next();
 						banker.download(dwnLoc, fnms.get(index));
@@ -252,7 +278,15 @@ public class IdentityManagementUI {
 						System.out.println("File doesn't exist");
 					}
 				} while (index >= fnms.size());
-				
+
+			} catch (Exception exception) {
+				System.out.println(exception.getMessage());
+			}
+
+			int index = -1;
+			try {
+				System.out.println(banker.displayDetails(applicantId));
+
 				// System.out.println("Enter another file index to download: ");
 				// int index2 = scanner.nextInt();
 				// System.out.println("Enter a download folder loc for this
@@ -355,17 +389,21 @@ public class IdentityManagementUI {
 				}
 			}
 			pendingList = banker.viewPendingApplications();
+			try {
 			if (pendingList.size() > 0) {
 				System.out.println("Do you want to keep reviewing applications?\n1. yes\n2. no");
-				int continueChoice = scanner.nextInt();
-				while (continueChoice != 1 && continueChoice != 2) {
+				String continueChoice = keyboardInput.readLine();
+				while (!continueChoice.equals("1") && !continueChoice.equals("2")) {
 					System.out.println(
 							"Please enter an appropriate value. Do you want to keep reviewing applications?\n1. yes\n2. no");
-					continueChoice = scanner.nextInt();
+					continueChoice = keyboardInput.readLine();
 				}
-				if (continueChoice == 2) {
+				if (continueChoice.equals("2")) {
 					break;
 				}
+			}
+			} catch (Exception exception) {
+				System.out.println(exception.getMessage());
 			}
 		}
 		if (pendingList.size() == 0) {
@@ -407,7 +445,7 @@ public class IdentityManagementUI {
 	}
 
 	public void signUp() { // newAccount
-		BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
+		
 		try {
 			System.out.println(
 					"Do you want to create an individual account or a joint account?\n1. Individual\n2. Joint");
@@ -546,8 +584,19 @@ public class IdentityManagementUI {
 			System.out.println(menu.ordinal() + "\t" + menu);
 		}
 		System.out.println("Choice");
-		int gender = scanner.nextInt();
+		int gender = 0;
+		String ordinal = scanner.next();
 
+		boolean check = true;
+		while (check) {
+			if (ordinal.equals("1") || ordinal.equals("2") || ordinal.equals("3") || ordinal.equals("4")) {
+				gender = Integer.parseInt(ordinal);
+				check = false;
+			} else {
+				System.out.println("Please Re-enter: ");
+				ordinal = scanner.next();
+			}
+		}
 		if (0 <= gender && Gender.values().length > gender) {
 			genderChoice = Gender.values()[gender];
 			switch (genderChoice) {
@@ -903,7 +952,7 @@ public class IdentityManagementUI {
 				if (customer.getApplicantDetails(applicantId).getAccountType() == AccountType.JOINT) {
 					// print uci, username and password for both accounts.
 					System.out.println("For primary customer: ");
-					String uci = newCustomer.getUci();
+					BigInteger uci = newCustomer.getUci();
 					String userId = newCustomer.getUserId();
 					String password = newCustomer.getPassword();
 					System.out.println("Login using the following details:");
@@ -915,7 +964,7 @@ public class IdentityManagementUI {
 					long linkedApplicantId = customer.getApplicantDetails(applicantId).getLinkedApplication();
 					CustomerBean secondaryCustomer = customer.getCustomerByApplicantId(linkedApplicantId);
 					System.out.println("For secondary customer: ");
-					String secondaryUci = secondaryCustomer.getUci();
+					BigInteger secondaryUci = secondaryCustomer.getUci();
 					String secondaryUserId = secondaryCustomer.getUserId();
 					String secondaryPassword = secondaryCustomer.getPassword();
 					System.out.println("Login using the following details:");
@@ -931,7 +980,7 @@ public class IdentityManagementUI {
 				}
 				// print a common account number generated for both accounts/
 				else {
-					String uci = newCustomer.getUci();
+					BigInteger uci = newCustomer.getUci();
 					String userId = newCustomer.getUserId();
 					String password = newCustomer.getPassword();
 					System.out.println("Login using the following details:");

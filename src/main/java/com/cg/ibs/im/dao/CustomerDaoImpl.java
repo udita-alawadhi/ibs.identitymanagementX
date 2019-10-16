@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,20 +26,20 @@ import com.cg.ibs.im.exception.IBSException;
 
 public class CustomerDaoImpl implements CustomerDao {
 
-	private static Map<String, CustomerBean> customerDao = new HashMap<String, CustomerBean>();
+	private static Map<BigInteger, CustomerBean> customerDao = new HashMap<BigInteger, CustomerBean>();
 	public static final String UPLOADS_LOC = "./uploads";
 	CustomerBean newCustomer = new CustomerBean();
 
 	static {
 		CustomerBean customer1 = new CustomerBean();
-		customer1.setUci("5555111151511001");
+		customer1.setUci(new BigInteger("5555111151511001"));
 		customer1.setUserId("udita");
 		customer1.setPassword("abc123");
 		AccountBean account1 = new AccountBean();
-		account1.setAccountNumber("05100001111");
+		account1.setAccountNumber(new BigInteger("05100001111"));
 		account1.setCurrentBalance(new BigDecimal("20048.32"));
 		AccountBean accountNew = new AccountBean();
-		accountNew.setAccountNumber("05554001111");
+		accountNew.setAccountNumber(new BigInteger("05554001111"));
 		accountNew.setCurrentBalance(new BigDecimal("48.32"));
 
 		Set<AccountBean> accounts1 = new HashSet<AccountBean>();
@@ -79,11 +80,11 @@ public class CustomerDaoImpl implements CustomerDao {
 		customerDao.put(customer1.getUci(), customer1);
 
 		CustomerBean customer2 = new CustomerBean();
-		customer2.setUci("5555111151512201");
+		customer2.setUci(new BigInteger("5555111151512201"));
 		customer2.setUserId("chetan551");
 		customer2.setPassword("xyz123");
 		AccountBean account2 = new AccountBean();
-		account2.setAccountNumber("05100222111");
+		account2.setAccountNumber(new BigInteger("05100222111"));
 		account2.setCurrentBalance(new BigDecimal("208.92"));
 		Set<AccountBean> accounts = new HashSet<AccountBean>();
 		accounts.add(account2);
@@ -136,7 +137,7 @@ public class CustomerDaoImpl implements CustomerDao {
 	@Override
 	public CustomerBean getCustomerDetails(String uci) throws IBSCustomException {
 		newCustomer = new CustomerBean();
-		for (Entry<String, CustomerBean> entry : customerDao.entrySet()) {
+		for (Entry<BigInteger, CustomerBean> entry : customerDao.entrySet()) {
 			if (entry.getKey().equals(uci)) {
 				newCustomer = entry.getValue();
 				break;
@@ -149,13 +150,13 @@ public class CustomerDaoImpl implements CustomerDao {
 	}
 
 	@Override
-	public Set<String> getAllCustomers() {
-		return new TreeSet<String>(customerDao.keySet());
+	public Set<BigInteger> getAllCustomers() {
+		return new TreeSet<BigInteger>(customerDao.keySet());
 	}
 
 	public CustomerBean getCustomerByApplicantId(long applicantId) {
 		CustomerBean newCustomer = new CustomerBean();
-		for (Entry<String, CustomerBean> entry : customerDao.entrySet()) {
+		for (Entry<BigInteger, CustomerBean> entry : customerDao.entrySet()) {
 			long appId = entry.getValue().getApplicant().getApplicantId();
 			if (appId == applicantId) {
 				newCustomer = entry.getValue();
